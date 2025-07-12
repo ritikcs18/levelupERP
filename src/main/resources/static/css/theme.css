@@ -1,0 +1,19 @@
+body {
+    background-color: #f5faff; /* very light blue */
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.btn-primary {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.btn-primary:hover {
+    background-color: #004a99;
+    border-color: #004a99;
+}
+
+.card {
+    border: none;
+    border-radius: 1rem;
+}
