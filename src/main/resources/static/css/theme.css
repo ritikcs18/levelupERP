@@ -17,3 +17,58 @@ body {
     border: none;
     border-radius: 1rem;
 }
+
+/* ===== SIDEBAR STYLES ===== */
+
+.sidebar-container {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 15px 10px;
+    height: 100%;
+}
+
+.sidebar-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: #0d6efd;
+    text-align: center;
+}
+
+.sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    border-radius: 5px;
+    color: #333;
+    transition: all 0.2s ease-in-out;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #e9f2ff;
+    color: #0d6efd;
+}
+
+.sidebar .nav-link.active {
+    background-color: #0d6efd;
+    color: #fff !important;
+    font-weight: 500;
+}
+
+.table td, .table th {
+    white-space: nowrap;  /* Keeps content in one line */
+}
+
+/* Optional: set minimum width to prevent cramping */
+.table td, .table th {
+    min-width: 120px;
+}
+
+.small-table {
+    font-size: 0.8rem;  /* or try 0.75rem */
+}
+
