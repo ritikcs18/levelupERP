@@ -72,3 +72,8 @@ body {
     font-size: 0.8rem;  /* or try 0.75rem */
 }
 
+.nav-link:hover:not(.active):not(.disabled) {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
