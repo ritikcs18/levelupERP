@@ -1,30 +1,36 @@
 package com.levelup.erp.vendor.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.List;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class VendorDTO {
     private Long id;
-    private String name;        //madatory
-    private String vendorCode;   //madatory
-    private String businessTypeName;  //madatory
-    private String country;//madatory
-    private String city;//madatory
+    private String vendorCode;
+    private String name;
     private String address;
-    private String pinCode;//madatory
+    private String city;
+    private String region;
+    private String country;
+    private String pincode;
+    private String govtId;
+    private String gstNumber;
     private String email;
-    private String contactNumber;//madatory
-    private String gstNumber;//madatory
-    private boolean active; //madatory
-    //private LocalDateTime onboardingDate; //madatory
+    private boolean isActive;
+    private String paymentCurrency;
+    private String purchasingGroup;
     private LocalDate onboardingDate;
-    private List<String> vendorPlants;
+    private LocalDate exitDate;
+    private String isdCode;
+    private String contactNumber;
+    private String businessTypeCode;
     private String accountNumber;
     private String ifscCode;
-
 }

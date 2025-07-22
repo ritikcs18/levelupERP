@@ -13,8 +13,8 @@ public class VendorBankAccount {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "vendor_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "vendor_id", nullable = false, unique = true)
     private Vendor vendor;
 
     @Column(nullable = false)

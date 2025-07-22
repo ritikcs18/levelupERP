@@ -5,12 +5,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/products")
+@RequestMapping("/product")
 public class ProductController {
 
-    @GetMapping
+
+    @GetMapping("/view")
     public String showProductsPage() {
-        return "product/product"; // loads templates/product/product.html
+        return "product/viewProduct"; // loads templates/product/product.html
     }
 
 }

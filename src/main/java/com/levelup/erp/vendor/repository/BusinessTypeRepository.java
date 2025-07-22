@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface BusinessTypeRepository extends JpaRepository<BusinessType, String> {
 
     Optional<BusinessType> findByName(String name);
+    Optional<BusinessType> findByCode(String code);
+
 }

@@ -1,4 +1,4 @@
-USE tempdb; 
+# USE tempdb;
 
 CREATE TABLE vendor_bank_account (
     id INT AUTO_INCREMENT PRIMARY KEY,

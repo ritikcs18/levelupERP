@@ -1,152 +1,232 @@
 package com.levelup.erp.vendor.service.impl;
+
 import com.levelup.erp.vendor.dto.VendorDTO;
-import com.levelup.erp.vendor.model.*;
+import com.levelup.erp.vendor.dto.VendorMapper;
+import com.levelup.erp.vendor.model.BusinessType;
+import com.levelup.erp.vendor.model.Vendor;
+import com.levelup.erp.vendor.model.VendorBankAccount;
 import com.levelup.erp.vendor.repository.BusinessTypeRepository;
-import com.levelup.erp.vendor.repository.PlantRepository;
+import com.levelup.erp.vendor.repository.VendorBankAccountRepository;
 import com.levelup.erp.vendor.repository.VendorRepository;
 import com.levelup.erp.vendor.service.VendorService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.levelup.erp.vendor.dto.VendorMapper.toDTO;
+
+
 @Service
+
 public class VendorServiceImpl implements VendorService {
 
     private final VendorRepository vendorRepository;
+    private final VendorBankAccountRepository bankAccountRepository;
     private final BusinessTypeRepository businessTypeRepository;
-    private  final PlantRepository plantRepository;
-
 
     public VendorServiceImpl(VendorRepository vendorRepository,
-                             BusinessTypeRepository businessTypeRepository,
-                             PlantRepository plantRepository) {
+                             VendorBankAccountRepository bankAccountRepository,
+                             BusinessTypeRepository businessTypeRepository) {
+
         this.vendorRepository = vendorRepository;
+        this.bankAccountRepository = bankAccountRepository;
         this.businessTypeRepository = businessTypeRepository;
-        this.plantRepository = plantRepository;
     }
+
 
     @Override
-    public List<Vendor> getAllVendors() {
-        return vendorRepository.findAll();
+    public List<VendorDTO> getAllVendors() {
+        List<Vendor> vendors = vendorRepository.findAll();
+        return vendors.stream()
+                .map(VendorMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public List<VendorDTO> getAllVendorDTOs() {
-        return vendorRepository.findAll().stream().map(v -> {
-            VendorDTO dto = new VendorDTO();
-            dto.setId(v.getId());
-            dto.setName(v.getName());
-            dto.setVendorCode(v.getVendorCode());
-            dto.setBusinessTypeName(v.getBusinessType() != null ? v.getBusinessType().getName() : "");
-            dto.setCountry(v.getCountry());
-            dto.setCity(v.getCity());
-            dto.setEmail(v.getEmail());
-            dto.setAddress(v.getAddress());
-            dto.setPinCode(v.getPincode());
-            dto.setContactNumber(v.getContactNumber());
-            dto.setGstNumber(v.getGstNumber());
-            dto.setActive(v.isActive());
-            dto.setOnboardingDate(v.getOnboardingDate());
 
-            List<String> plantNames = v.getVendorPlants() != null
-                    ? v.getVendorPlants().stream()
-                    .map(vp -> vp.getPlant().getName())
-                    .collect(Collectors.toList())
-                    : new ArrayList<>();
-            dto.setVendorPlants(plantNames);
 
-            return dto;
-        }).collect(Collectors.toList());
-    }
+//    @Override
+//    @Transactional
+//    public VendorDTO addVendor(VendorDTO dto) {
+//        dto.setVendorCode(generateVendorCode(dto.getPincode()));
+//        Vendor vendor = VendorMapper.toEntity(dto);
+//        Vendor savedVendor = vendorRepository.save(vendor);
+//        return toDTO(savedVendor);
+//    }
 
-    public void saveVendorFromDTO(VendorDTO dto) {
-        Vendor vendor = new Vendor();
-        vendor.setName(dto.getName());
-        vendor.setVendorCode(dto.getVendorCode());
-        vendor.setEmail(dto.getEmail());
-        vendor.setContactNumber(dto.getContactNumber());
-        vendor.setCountry(dto.getCountry());
-        vendor.setCity(dto.getCity());
-        vendor.setAddress(dto.getAddress());
-        vendor.setPincode(dto.getPinCode());
-        vendor.setGstNumber(dto.getGstNumber());
-        vendor.setOnboardingDate(LocalDate.from(dto.getOnboardingDate()));
-        vendor.setActive(dto.isActive());
 
-        // Set Business Type
-        BusinessType businessType = businessTypeRepository.findByName(dto.getBusinessTypeName())
-                .orElseThrow(() -> new RuntimeException("Invalid business type: " + dto.getBusinessTypeName()));
-        vendor.setBusinessType(businessType);
+    @Override
+    @Transactional
+    public void saveVendorFromDTO(VendorDTO vendorDTO) {
 
-        // Set Vendor Bank Account
-        if (dto.getAccountNumber() != null && dto.getIfscCode() != null) {
-            VendorBankAccount account = new VendorBankAccount();
-            account.setAccountNumber(dto.getAccountNumber());
-            account.setIfscCode(dto.getIfscCode());
-            account.setVendor(vendor);
-
-            List<VendorBankAccount> accounts = new ArrayList<>();
-            accounts.add(account);
-            vendor.setBankAccounts(accounts); //
+        vendorDTO.setVendorCode(generateVendorCode(vendorDTO.getPincode()));
+        Vendor vendor = VendorMapper.toEntity(vendorDTO);
+        // Set Business Type if present
+        if (vendorDTO.getBusinessTypeCode() != null) {
+            businessTypeRepository.findByCode(vendorDTO.getBusinessTypeCode())
+                    .ifPresent(vendor::setBusinessType);
         }
-
-        // Set Plants
-        if (dto.getVendorPlants() != null && !dto.getVendorPlants().isEmpty()) {
-            List<VendorPlant> vendorPlants = dto.getVendorPlants().stream()
-                    .map(plantName -> {
-                        Plant plant = plantRepository.findByName(plantName)
-                                .orElseThrow(() -> new RuntimeException("Plant not found: " + plantName));
-                        VendorPlant vp = new VendorPlant();
-                        vp.setVendor(vendor);
-                        vp.setPlant(plant);
-                        return vp;
-                    }).collect(Collectors.toList());
-            vendor.setVendorPlants(vendorPlants);
-        }
-
         vendorRepository.save(vendor);
     }
 
-
-    public List<VendorDTO> searchVendors(String keyword) {
-        List<Vendor> vendors;
-
-        if (keyword == null || keyword.trim().isEmpty()) {
-            vendors = vendorRepository.findAll();
-        } else {
-            vendors = vendorRepository.findByNameContainingIgnoreCaseOrVendorCodeContainingIgnoreCase(keyword, keyword);
-        }
-
-        return vendors.stream().map(this::mapToDTO).collect(Collectors.toList());
+    @Override
+    public List<VendorDTO> searchVendorsByNameOrCode(String keyword) {
+        List<Vendor> vendors = vendorRepository.findByVendorCodeContainingIgnoreCaseOrNameContainingIgnoreCase(keyword, keyword);
+        return vendors.stream()
+                .map(VendorMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
 
-    private VendorDTO mapToDTO(Vendor vendor) {
-        VendorDTO dto = new VendorDTO();
-        dto.setId(vendor.getId());
-        dto.setName(vendor.getName());
-        dto.setVendorCode(vendor.getVendorCode());
-        dto.setBusinessTypeName(vendor.getBusinessType().getName());
-        dto.setCountry(vendor.getCountry());
-        dto.setCity(vendor.getCity());
-        dto.setAddress(vendor.getAddress());
-        dto.setPinCode(vendor.getPincode());
-        dto.setEmail(vendor.getEmail());
-        dto.setContactNumber(vendor.getContactNumber());
-        dto.setGstNumber(vendor.getGstNumber());
-        dto.setActive(vendor.isActive());
-        dto.setOnboardingDate(vendor.getOnboardingDate());
 
-        if (vendor.getVendorPlants() != null) {
-            List<String> plantNames = vendor.getVendorPlants().stream()
-                    .map(vp -> vp.getPlant().getName())
-                    .collect(Collectors.toList());
-            dto.setVendorPlants(plantNames);
+    @Transactional
+    public void updateVendor(VendorDTO dto) {
+        Vendor existing = vendorRepository.findByVendorCode(dto.getVendorCode())
+                .orElseThrow(() -> new RuntimeException("Vendor not found"));
+        Vendor updated = VendorMapper.toEntity(dto);
+        updated.setId(existing.getId());
+        vendorRepository.save(updated);
+    }
+
+
+    public Optional<VendorDTO> getVendorDTOByCode(String vendorCode) {
+        Optional<Vendor> vendor = vendorRepository.findByVendorCode(vendorCode);
+        return vendorRepository.findByVendorCode(vendorCode)
+                .map(VendorMapper::toDTO);
+    }
+
+    @Transactional
+    public void deleteByVendorCode(String vendorCode) {
+        Vendor vendor = vendorRepository.findByVendorCode(vendorCode)
+                .orElseThrow(() -> new RuntimeException("Vendor not found"));
+        vendorRepository.deleteByVendorCode(vendorCode);
+    }
+
+
+    @Transactional
+    public void saveAll(List<Vendor> vendors) throws Exception {
+
+        try {
+            vendorRepository.saveAll(vendors);
+
+        }catch (Exception ex){
+            throw new Exception("Failed to parse CSV file: " + ex.getMessage());
         }
 
-        return dto;
+    }
+
+
+
+    public void importVendorsFromCsv(MultipartFile file) throws Exception {
+        List<Vendor> vendors = new ArrayList<>();
+
+        Map<String, Integer> existingMaxSeqMap = new HashMap<>();
+        Map<String, Integer> localSeqMap = new HashMap<>();
+
+        // Preload existing vendor codes
+        List<String> existingCodes = vendorRepository.findAllVendorCodes(); // You write this method
+        for (String code : existingCodes) {
+            String[] parts = code.split("-");
+            if (parts.length == 3) {
+                String pin = parts[1];
+                int seq = Integer.parseInt(parts[2]);
+                existingMaxSeqMap.put(pin, Math.max(existingMaxSeqMap.getOrDefault(pin, 0), seq));
+            }
+        }
+
+        try (BufferedReader br = new BufferedReader(
+                new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8))) {
+
+            String line;
+            boolean isFirstLine = true;
+
+            while ((line = br.readLine()) != null) {
+                if (isFirstLine) {
+                    isFirstLine = false;
+                    continue;
+                }
+
+                String[] fields = line.split(",");
+
+                if (fields.length < 19) {
+                    throw new Exception("Invalid CSV format. Row must have 19 columns.");
+                }
+
+                VendorDTO dto = new VendorDTO();
+                dto.setName(fields[0].trim());
+                dto.setAddress(fields[1].trim());
+                dto.setCity(fields[2].trim());
+                dto.setRegion(fields[3].trim());
+                dto.setCountry(fields[4].trim());
+                dto.setPincode(fields[5].trim());
+                dto.setGovtId(fields[6].trim());
+                dto.setGstNumber(fields[7].trim());
+                dto.setEmail(fields[8].trim());
+                dto.setActive(Boolean.parseBoolean(fields[9].trim()));
+                dto.setPaymentCurrency(fields[10].trim());
+                dto.setPurchasingGroup(fields[11].trim());
+                dto.setOnboardingDate(LocalDate.parse(fields[12].trim()));
+                dto.setExitDate(fields[13].isBlank() ? null : LocalDate.parse(fields[13].trim()));
+                dto.setIsdCode(fields[14].trim());
+                dto.setContactNumber(fields[15].trim());
+                dto.setBusinessTypeCode(fields[16].trim());
+                dto.setAccountNumber(fields[17].trim());
+                dto.setIfscCode(fields[18].trim());
+                //dto.setVendorCode(generateVendorCode(dto.getPincode()));
+
+                String vendorCode = generateVendorCodeForBulkUpload(dto.getPincode(), existingMaxSeqMap, localSeqMap);
+                dto.setVendorCode(vendorCode);
+
+                // Convert to entity
+                Vendor vendor = VendorMapper.toEntity(dto);
+
+                // Set BusinessType
+//                BusinessType businessType = businessTypeRepository.findByCode(dto.getBusinessTypeCode())
+//                        .orElseThrow(() -> new RuntimeException("Invalid BusinessType code: " + dto.getBusinessTypeCode()));
+//                vendor.setBusinessType(businessType);
+
+                vendors.add(vendor);
+            }
+
+            saveAll(vendors);
+
+        } catch (Exception e) {
+            throw new Exception("Failed to parse CSV file: " + e.getMessage(), e);
+        }
+    }
+
+
+    private String generateVendorCode(String pincode) {
+        // Fetch count of existing vendors with same pincode and country
+        long count = vendorRepository.countByPincode(pincode);
+        // Increment for the new vendor
+        long nextNumber = count + 1;
+        String countryCode = "001";
+
+        // Format number as 3-digit with leading zeros
+        String formattedNumber = String.format("%03d", nextNumber);
+
+        // Build vendor code
+        return String.format("VN-%s-%s-%s", pincode, countryCode.toUpperCase(), formattedNumber);
+    }
+
+    public String generateVendorCodeForBulkUpload(String pincode,
+                                                  Map<String, Integer> existingMaxSeqMap,
+                                                  Map<String, Integer> localSeqMap) {
+        int baseSeq = existingMaxSeqMap.getOrDefault(pincode, 0);
+        int nextSeq = localSeqMap.getOrDefault(pincode, baseSeq) + 1;
+
+        localSeqMap.put(pincode, nextSeq);
+        String countryCode = "001";
+        String formattedNumber = String.format("%03d", nextSeq);
+
+        return String.format("VN-%s-%s-%s", pincode, countryCode.toUpperCase(), formattedNumber);
     }
 
 

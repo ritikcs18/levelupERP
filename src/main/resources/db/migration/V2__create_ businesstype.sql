@@ -1,4 +1,4 @@
-USE tempdb; 
+# USE tempdb;
 
 CREATE TABLE business_type (
     code VARCHAR(10) PRIMARY KEY,         -- E.g., WSS, TR, RT

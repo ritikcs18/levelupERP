@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "vendor")
@@ -75,11 +74,9 @@ public class Vendor {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    // Optional: one-to-many vendor to bank accounts
-    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VendorBankAccount> bankAccounts;
 
-    // Optional: many-to-many vendor to plant
-    @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<VendorPlant> vendorPlants;
+    @OneToOne(mappedBy = "vendor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private VendorBankAccount bankAccount;
+
+
 }

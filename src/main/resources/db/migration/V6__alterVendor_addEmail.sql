@@ -1,3 +1,3 @@
-USE tempdb;
+# USE tempdb;
 
 ALTER TABLE vendor ADD COLUMN email VARCHAR(255);

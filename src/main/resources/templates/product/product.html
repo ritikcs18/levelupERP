@@ -9,20 +9,17 @@
     <link rel="stylesheet" th:href="@{/css/theme.css}">
 </head>
 <body class="d-flex flex-column min-vh-100">
-
 <!-- Header -->
 <div th:replace="fragments/header :: header"></div>
 
-<!-- Main Container -->
 <main class="container-fluid flex-grow-1 py-4">
     <div class="row d-flex align-items-stretch h-100">
 
         <!-- Sidebar -->
-
-        <div sec:authorize="hasRole('ADMIN') or hasRole('SALES')" class="col-md-2 d-flex">
+        <div sec:authorize="hasAnyRole('ADMIN', 'SALES')" class="col-md-2 d-flex">
             <div class="sidebar-container sidebar w-100 p-3 bg-light border-end">
                 <div class="sidebar-title">Actions</div>
-                <div class="nav flex-column">
+                <div class="nav flex-column gap-2">
                     <a class="nav-link active" href="#"><i class="bi bi-card-list"></i> View</a>
                     <a class="nav-link" href="#"><i class="bi bi-plus-circle"></i> Add</a>
                     <a class="nav-link" href="#"><i class="bi bi-pencil-square"></i> Update</a>
@@ -63,40 +60,20 @@
                         <td>Compact all-in-one printer</td>
                     </tr>
                     <tr>
-                        <td>101</td>
-                        <td>Printer</td>
+                        <td>102</td>
+                        <td>Monitor</td>
                         <td>Electronics</td>
-                        <td>₹5,999</td>
-                        <td>23</td>
-                        <td>Compact all-in-one printer</td>
+                        <td>₹8,499</td>
+                        <td>12</td>
+                        <td>24-inch HD monitor</td>
                     </tr>
-                    <tr>
-                        <td>101</td>
-                        <td>Printer</td>
-                        <td>Electronics</td>
-                        <td>₹5,999</td>
-                        <td>23</td>
-                        <td>Compact all-in-one printer</td>
-                    </tr>
-                    <tr>
-                        <td>101</td>
-                        <td>Printer</td>
-                        <td>Electronics</td>
-                        <td>₹5,999</td>
-                        <td>23</td>
-                        <td>Compact all-in-one printer</td>
-                    </tr>
-
-
-                    <!-- More rows... -->
+                    <!-- More sample rows -->
                     </tbody>
                 </table>
             </div>
         </div>
-
     </div>
 </main>
-
 
 <!-- Footer -->
 <div th:replace="fragments/footer :: footer"></div>

@@ -1,4 +1,4 @@
-USE tempdb; 
+# --USE tempdb;
 
 CREATE TABLE plant (
     id INT AUTO_INCREMENT PRIMARY KEY,

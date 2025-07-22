@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <meta charset="UTF-8">
+  <title>Finished Materials - ERP</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/theme.css}">
+  <link rel="stylesheet" th:href="@{/css/material-theme.css}">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+<!-- Header -->
+<div th:replace="fragments/header :: header"></div>
+
+<main class="container-fluid flex-grow-1 py-4">
+  <div class="row">
+
+    <!-- Sidebar -->
+    <div sec:authorize="hasAnyRole('ADMIN', 'OPS')" class="col-md-2">
+      <div class="bg-white shadow-sm p-3 rounded-end sidebar-full-height">
+        <h5 class="mb-4">Material Actions</h5>
+        <ul class="nav flex-column gap-2">
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/materials/add}">
+              <i class="bi bi-plus-lg"></i> Add Material
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/materials/view}">
+              <i class="bi bi-eye me-1"></i> View Material
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/materials/delete}">
+              <i class="bi bi-upload"></i> Delete Material
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/materials/upload}">
+              <i class="bi bi-upload"></i> Bulk Upload
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-10">
+      <!-- Search Bar -->
+      <form th:action="@{/materials/view}" method="get" class="mb-3 d-flex flex-wrap align-items-center gap-2">
+        <input type="hidden" name="mode" value="view" />
+        <div class="flex-grow-1">
+          <input type="text"
+                 name="keyword"
+                 th:value="${keyword}"
+                 class="form-control border-0 border-bottom rounded-0 shadow-none"
+                 placeholder="Search by Header Material or Sub Material" />
+        </div>
+        <button type="submit" class="btn btn-outline-primary btn-sm">Search</button>
+      </form>
+
+      <!-- Finished Material Table -->
+      <div id="materialTable" class="table-responsive border rounded p-2">
+        <table class="table table-bordered table-sm table-hover text-nowrap mb-0">
+          <thead class="table-light sticky-top">
+          <tr>
+            <th>Plant</th>
+            <th>Header Material</th>
+            <th>Sub Material</th>
+            <th>Description</th>
+            <th>Type</th>
+            <th>Group</th>
+            <th>Base UOM</th>
+            <th>MRP Type</th>
+            <th>Currency</th>
+            <th>NLP</th>
+            <th>Artwork No.</th>
+            <th>Artwork Rev.</th>
+            <th>Spec No.</th>
+            <th>Spec Rev.</th>
+            <th>Purch. Group</th>
+            <th>Valuation Class</th>
+            <th>GTIN</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:if="${materials.isEmpty()}">
+            <td colspan="18" class="text-center text-muted">No materials found.</td>
+          </tr>
+          <tr th:each="mat : ${materials}">
+            <td th:text="${mat.plant}"></td>
+            <td th:text="${mat.headerMaterial}"></td>
+            <td th:text="${mat.subMaterial}"></td>
+            <td th:text="${mat.materialDescription}"></td>
+            <td th:text="${mat.materialTypeDescription}"></td>
+            <td th:text="${mat.materialGroup}"></td>
+            <td th:text="${mat.baseUnitOfMeasure}"></td>
+            <td th:text="${mat.mrpType}"></td>
+            <td th:text="${mat.currency}"></td>
+            <td th:text="${mat.nlp}"></td>
+            <td th:text="${mat.artworkNumber}"></td>
+            <td th:text="${mat.artworkRevisionNo}"></td>
+            <td th:text="${mat.technicalSpecNo}"></td>
+            <td th:text="${mat.technicalSpecRevisionNo}"></td>
+            <td th:text="${mat.purchasingGroup}"></td>
+            <td th:text="${mat.valuationClass}"></td>
+            <td th:text="${mat.gtinNumber}"></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Footer -->
+<div th:replace="fragments/footer :: footer"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

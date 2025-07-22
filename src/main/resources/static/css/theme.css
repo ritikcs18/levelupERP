@@ -1,79 +1,142 @@
-body {
-    background-color: #f5faff; /* very light blue */
-    font-family: 'Segoe UI', sans-serif;
+/* Global Reset and Base Styles */
+* {
+    box-sizing: border-box;
 }
 
-.btn-primary {
-    background-color: #0056b3;
-    border-color: #0056b3;
-}
-
-.btn-primary:hover {
-    background-color: #004a99;
-    border-color: #004a99;
-}
-
-.card {
-    border: none;
-    border-radius: 1rem;
-}
-
-/* ===== SIDEBAR STYLES ===== */
-
-.sidebar-container {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    padding: 15px 10px;
+html, body {
     height: 100%;
-}
-
-.sidebar-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    color: #0d6efd;
-    text-align: center;
-}
-
-.sidebar .nav-link {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    padding: 8px 10px;
-    margin-bottom: 6px;
-    border-radius: 5px;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px; /* Reduced from 16px to 14px */
     color: #333;
-    transition: all 0.2s ease-in-out;
+    background-color: #f8f9fa;
 }
 
-.sidebar .nav-link:hover {
-    background-color: #e9f2ff;
-    color: #0d6efd;
+/* Typography */
+h1, h2, h3, h4, h5 {
+    font-weight: 600;
+    font-size: 1.2rem; /* Slightly smaller */
+    color: #1a237e; /* Dark Blue */
 }
 
-.sidebar .nav-link.active {
-    background-color: #0d6efd;
-    color: #fff !important;
+p, label {
+    font-size: 14px; /* Slightly smaller */
+}
+
+label {
     font-weight: 500;
 }
 
-.table td, .table th {
-    white-space: nowrap;  /* Keeps content in one line */
+/* Layout Containers */
+.main-container {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
 }
 
-/* Optional: set minimum width to prevent cramping */
-.table td, .table th {
-    min-width: 120px;
+.sidebar {
+    width: 220px; /* Slightly narrower */
+    background-color: #ffffff;
+    border-right: 1px solid #dee2e6;
+    padding: 0.75rem; /* Reduced padding */
 }
 
-.small-table {
-    font-size: 0.8rem;  /* or try 0.75rem */
+.main-content {
+    flex-grow: 1;
+    padding: 16px; /* Slightly smaller */
+    overflow-y: auto;
 }
 
-.nav-link:hover:not(.active):not(.disabled) {
-    background-color: #f8f9fa;
+/* Card/Section Blocks */
+.section {
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+/* Form Elements */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    padding: 6px 8px; /* Reduced padding */
     border-radius: 5px;
+    border: 1px solid #ced4da;
+    margin-bottom: 10px;
+    font-size: 13px;
 }
 
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.08rem rgba(13, 110, 253, 0.25);
+}
+
+/* Buttons */
+.btn {
+    font-size: 13px !important;
+    padding: 6px 12px !important;
+    border-radius: 5px !important;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #084298;
+    border-color: #06357a;
+}
+
+.btn-outline-primary {
+    color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-outline-primary:hover {
+    background-color: #0d6efd;
+    color: white;
+}
+
+/* Tables */
+.table th {
+    background-color: #e3f2fd;
+    color: #0d47a1;
+    font-size: 13px;
+    padding: 10px;
+}
+
+.table td {
+    font-size: 13px;
+    padding: 8px;
+    vertical-align: middle;
+}
+
+.table tbody tr:hover {
+    background-color: #f1f8ff;
+}
+
+/* Scrollbars for large tables */
+.scrollable-table {
+    max-height: 350px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+/* Utility Spacing */
+.mt-20 {
+    margin-top: 16px;
+}
+.mb-20 {
+    margin-bottom: 16px;
+}

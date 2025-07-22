@@ -1,4 +1,4 @@
-USE tempdb; 
+# USE tempdb;
 
 CREATE TABLE vendor (
     id INT AUTO_INCREMENT PRIMARY KEY,
