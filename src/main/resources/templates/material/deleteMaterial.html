@@ -52,15 +52,12 @@
         <div class="col-md-10 d-flex flex-column" style="height: calc(100vh - 120px); overflow: auto;">
             <h4 class="mb-3">Delete Material</h4>
 
-            <form th:action="@{/delete}" method="post" class="row g-3">
-                <input type="hidden" name="_method" value="delete" />
-
+            <form th:action="@{/materials/delete}" method="post" class="row g-3">
                 <div class="col-md-6">
                     <label for="headerMaterialDelete" class="form-label">Header Material</label>
-                    <input type="text" class="form-control" id="headerMaterialDelete" name="code" required>
+                    <input type="text" class="form-control" id="headerMaterialDelete" name="headerMaterial" required>
                 </div>
 
-                <!-- Spacer div to push button to next line and align -->
                 <div class="col-12">
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </div>
@@ -68,6 +65,7 @@
 
             <div th:if="${deleteSuccess}" class="alert alert-success mt-3">Header Material deleted successfully.</div>
             <div th:if="${deleteError}" class="alert alert-danger mt-3" th:text="${deleteError}"></div>
+
         </div>
 
     </div>

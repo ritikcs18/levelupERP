@@ -1,8 +1,6 @@
 package com.levelup.erp.material.controller;
 import com.levelup.erp.material.dto.FinishedMaterialDTO;
-import com.levelup.erp.material.models.FinishedMaterial;
 import com.levelup.erp.material.service.FinishedMaterialService;
-import com.levelup.erp.vendor.dto.VendorDTO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +35,7 @@ public class FinishedMaterialController {
     @PostMapping("/add")
     public String addMaterial(@ModelAttribute("finishedMaterialDTO") FinishedMaterialDTO finishedMaterialDTO,
                             RedirectAttributes redirectAttributes) {
-        finishedMaterialService.saveVendorFromDTO(finishedMaterialDTO);
+        finishedMaterialService.saveFromMaterialDTO(finishedMaterialDTO);
         redirectAttributes.addFlashAttribute("successMessage", "Material added successfully!");
         return "redirect:/materials/add";
     }
@@ -49,19 +47,17 @@ public class FinishedMaterialController {
     }
 
 
+
     @PostMapping("/delete")
-    public String deleteMaterial(Model model) {
+    public String deleteMaterial(@RequestParam("headerMaterial") String headerMaterial, Model model) {
+        try {
+            finishedMaterialService.deleteByHeaderMaterial(headerMaterial);
+            model.addAttribute("deleteSuccess", true);
+        } catch (Exception e) {
+            model.addAttribute("deleteError", "Header Material not found or could not be deleted.");
+        }
         return "material/deleteMaterial";
     }
-
-
-
-
-
-
-
-
-
 
 
 }

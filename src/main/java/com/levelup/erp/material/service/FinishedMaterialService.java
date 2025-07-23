@@ -25,9 +25,13 @@ public class FinishedMaterialService {
         return entities.stream().map(Mapper::fromEntity).collect(Collectors.toList());
     }
 
-    public void saveVendorFromDTO(FinishedMaterialDTO finishedMaterialDTO){
+    public void saveFromMaterialDTO(FinishedMaterialDTO finishedMaterialDTO){
         FinishedMaterial finishedMaterial = Mapper.toEntity(finishedMaterialDTO);
         finishedMaterialRepository.save(finishedMaterial);
+    }
+
+    public void deleteByHeaderMaterial(String headerMaterialName){
+        finishedMaterialRepository.deleteByHeaderMaterial(headerMaterialName);
     }
 
 
