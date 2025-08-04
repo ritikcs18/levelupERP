@@ -17,4 +17,6 @@ public interface FinishedMaterialRepository extends JpaRepository<FinishedMateri
     @Query("DELETE FROM FinishedMaterial fm WHERE fm.headerMaterial = :headerMaterial")
     void deleteByHeaderMaterial(@Param("headerMaterial") String headerMaterial);
 
+
+
 }

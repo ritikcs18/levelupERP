@@ -110,6 +110,25 @@
 			<version>10.14.0</version> <!-- ✅ supports MySQL 8.4 -->
 		</dependency>
 
+		<dependency>
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-pdfbox</artifactId>
+			<version>1.0.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.openhtmltopdf</groupId>
+			<artifactId>openhtmltopdf-slf4j</artifactId>
+			<version>1.0.10</version>
+		</dependency>
+
+		<!-- For XHTML support -->
+		<dependency>
+			<groupId>org.xhtmlrenderer</groupId>
+			<artifactId>flying-saucer-core</artifactId>
+			<version>9.1.22</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>mysql</groupId>
@@ -117,6 +136,8 @@
 			<version>8.0.33</version>
 		</dependency>
 	</dependencies>
+
+
 
 	<build>
 		<plugins>

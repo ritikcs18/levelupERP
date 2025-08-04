@@ -10,7 +10,7 @@ public interface VendorService {
 
     List<VendorDTO> getAllVendors();
 
-    //VendorDTO addVendor(VendorDTO dto);
+    List<String> getAllVendorCodes();
 
     void saveVendorFromDTO(VendorDTO vendorDTO);
 
@@ -25,4 +25,5 @@ public interface VendorService {
     void deleteByVendorCode(String code);
 
     void importVendorsFromCsv(MultipartFile file) throws Exception;
+
 }

@@ -77,8 +77,6 @@ public class VendorController {
     }
 
 
-
-
     //Search
     @GetMapping("/vendors/search")
     public String searchVendors(@RequestParam("keyword") String keyword, Model model) {

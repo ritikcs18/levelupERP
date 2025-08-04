@@ -2,9 +2,7 @@ package com.levelup.erp.vendor.service.impl;
 
 import com.levelup.erp.vendor.dto.VendorDTO;
 import com.levelup.erp.vendor.dto.VendorMapper;
-import com.levelup.erp.vendor.model.BusinessType;
 import com.levelup.erp.vendor.model.Vendor;
-import com.levelup.erp.vendor.model.VendorBankAccount;
 import com.levelup.erp.vendor.repository.BusinessTypeRepository;
 import com.levelup.erp.vendor.repository.VendorBankAccountRepository;
 import com.levelup.erp.vendor.repository.VendorRepository;
@@ -19,8 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static com.levelup.erp.vendor.dto.VendorMapper.toDTO;
 
 
 @Service
@@ -49,16 +45,13 @@ public class VendorServiceImpl implements VendorService {
                 .collect(Collectors.toList());
     }
 
-
-
-//    @Override
-//    @Transactional
-//    public VendorDTO addVendor(VendorDTO dto) {
-//        dto.setVendorCode(generateVendorCode(dto.getPincode()));
-//        Vendor vendor = VendorMapper.toEntity(dto);
-//        Vendor savedVendor = vendorRepository.save(vendor);
-//        return toDTO(savedVendor);
-//    }
+    @Override
+    public List<String> getAllVendorCodes() {
+        return vendorRepository.findAll()
+                .stream()
+                .map(Vendor::getVendorCode)
+                .collect(Collectors.toList());
+    }
 
 
     @Override
