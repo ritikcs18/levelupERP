@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Purchase Order PDF</title>
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+            margin: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .flex-container {
+            display: flex;
+            justify-content: space-between; /* Places Bill To on left, Ship To on right */
+            align-items: flex-start; /* Align both to the top */
+            gap: 20px; /* Space between columns */
+            margin-bottom: 20px;
+        }
+
+        .address-block {
+            width: 48%; /* Each block takes ~half width */
+            border: 1px solid #000; /* Border for ERP-style look */
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        .middle-details {
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: left;
+        }
+
+        .total {
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .signature {
+            margin-top: 50px;
+            text-align: right;
+        }
+
+        .signature-line {
+            margin-top: 30px;
+            border-top: 1px solid #000;
+            width: 200px;
+            display: inline-block;
+        }
+
+    </style>
+</head>
+<body>
+
+<h2>Purchase Order</h2>
+<!-- Bill To and Ship To -->
+<table style="width:100%; border-collapse: collapse; margin-bottom: 20px;">
+    <tr>
+        <!-- Bill To -->
+        <td style="width:50%; vertical-align: top; padding: 10px;">  <!-- border removed -->
+            <h4>Bill To</h4>
+            <div th:each="item : ${po.billTo}">
+                <p><strong>Code:</strong> <span th:text="${#strings.escapeXml(item.code)}"></span></p>
+                <p><strong>Name:</strong> <span th:text="${#strings.escapeXml(item.name)}"></span></p>
+                <p><strong>Address:</strong>
+                    <span th:text="${#strings.escapeXml(item.addressLine1)}"></span>,
+                    <span th:text="${#strings.escapeXml(item.addressLine2)}"></span>,
+                    <span th:text="${#strings.escapeXml(item.city)}"></span>,
+                    <span th:text="${#strings.escapeXml(item.state)}"></span> -
+                    <span th:text="${#strings.escapeXml(item.pincode)}"></span>
+                </p>
+                <p><strong>Email:</strong> <span th:text="${#strings.escapeXml(item.email)}"></span></p>
+                <p><strong>Country:</strong> <span th:text="${#strings.escapeXml(item.country)}"></span></p>
+                <p><strong>Phone:</strong> <span th:text="${#strings.escapeXml(item.phoneNumber)}"></span></p>
+            </div>
+        </td>
+
+        <!-- Ship To -->
+        <td style="width:50%; vertical-align: top; padding: 10px;"> <!-- border removed -->
+            <h4>Ship To</h4>
+            <div th:each="item : ${po.shipTo}">
+                <p><strong>Name:</strong> <span th:text="${#strings.escapeXml(item.name)}"></span></p>
+                <p><strong>Address:</strong>
+                    <span th:text="${#strings.escapeXml(item.addressLine1)}"></span>,
+                    <span th:text="${#strings.escapeXml(item.addressLine2)}"></span>,
+                    <span th:text="${#strings.escapeXml(item.city)}"></span>,
+                    <span th:text="${#strings.escapeXml(item.state)}"></span> -
+                    <span th:text="${#strings.escapeXml(item.pincode)}"></span>
+                </p>
+                <p><strong>Email:</strong> <span th:text="${#strings.escapeXml(item.email)}"></span></p>
+                <p><strong>Country:</strong> <span th:text="${#strings.escapeXml(item.country)}"></span></p>
+                <p><strong>Phone:</strong> <span th:text="${#strings.escapeXml(item.phoneNumber)}"></span></p>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<!-- Middle PO Details -->
+<div class="middle-details">
+    <p><strong>Currency:</strong> [[${#strings.escapeXml(po.poCurrency)}]]</p>
+    <p><strong>Mode of Delivery:</strong> [[${#strings.escapeXml(po.modeOfDilivery)}]]</p>
+    <p><strong>Term of Delivery:</strong> [[${#strings.escapeXml(po.termOfDilivery)}]]</p>
+    <p><strong>Port of Discharge:</strong> [[${#strings.escapeXml(po.portOfDischarge)}]]</p>
+    <p><strong>Final Destination:</strong> [[${#strings.escapeXml(po.placeOfFinalDestination)}]]</p>
+    <p><strong>Payment Term:</strong> [[${#strings.escapeXml(po.paymentTerm)}]]</p>
+</div>
+
+<!-- Materials Table -->
+<h3>Materials</h3>
+<table>
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Material Name</th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+        <th>Unit Measurement</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item, iterStat : ${po.lifOfSubMaterial}">
+        <td th:text="${iterStat.index + 1}"></td>
+        <td th:text="${#strings.escapeXml(item.itemCode)}"></td>
+        <td th:text="${#strings.escapeXml(item.quantity)}"></td>
+        <td th:text="${#strings.escapeXml(item.unitPrice)}"></td>
+        <td th:text="${#strings.escapeXml(item.unitOfMeasurement)}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<!-- Total -->
+<p class="total">
+    Total Amount: [[${#strings.escapeXml(po.totalAmount)}]] <br/>
+    Amount in Words: [[${#strings.escapeXml(po.totalAmountInWords)}]]
+</p>
+
+<!-- Signature -->
+<div class="signature">
+    <p>Authorized Signatory</p>
+    <div class="signature-line">Signature &amp; Seal</div>
+</div>
+
+</body>
+</html>
